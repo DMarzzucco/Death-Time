@@ -6,11 +6,22 @@ This project implements a technique inspired by the idea of ​​pressuring cus
 
 The core logic of the technique is based on server-side middleware that checks the current date against a predefined deadline. Once this deadline has passed, the application blocks all critical operations and deletes records from the database, ensuring that the application can no longer be used.
 
+## Implementation
+```
+Death Time = ('YEAR-MONTH-DAY HOURS:MINUTE:SECOND') 
+```
+## Exapmples 
 ```TS
-/* change these variables as need */
 const currenTime = new Date();
-const deathTime = new Date('YYYY-MM-DDTHH:mm:ssZ') //Set the deadline here
-/* stop changing here */
+const deathTime = new Date('YYYY-MM-DDTHH:mm:ssZ') 
+```
+```PY
+current_time = datetime.utcnow()
+death_time = datetime.strptime('YYYY-MM-DDTHH:mm:ssZ', '%Y-%m-%dT%H:%M:%SZ')
+```
+```CS
+var currentTime = DateTime.UtcNow;
+var deathTime = DateTime.Parse("YYYY-MM-DDTHH:mm:ssZ"); 
 ```
 
 ## Author
