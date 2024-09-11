@@ -1,4 +1,4 @@
-## Discription
+# Death Time
 
 This project implements a technique inspired by the idea of ​​pressuring customers to make outstanding payments by progressively rendering the application unusable after a specific deadline.
 
