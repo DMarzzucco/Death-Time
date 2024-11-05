@@ -1,5 +1,7 @@
+using System;
 using DeathTime.ASP.NET.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace DeathTime.ASP.NET.MIddleware
 {
@@ -24,8 +26,8 @@ namespace DeathTime.ASP.NET.MIddleware
         {
             try
             {
-                var currenTime = DateTime.UtcNow;
-                var deathTimer = DateTime.Parse("YYYY-MM-DDTHH:MM:SSZ");
+                var currenTime = DateTime.Now;
+                var deathTimer = DateTime.ParseExact("0000-00-00T00:00:00", "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
 
                 if (currenTime > deathTimer)
                 {
