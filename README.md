@@ -27,6 +27,12 @@ var deathTime = DateTime.Parse("YYYY-MM-DDTHH:mm:ssZ");
 
 If you wanna see how work this middleware. You can test [here](https://github.com/DMarzzucco/register_Date_with_No_Paid_incluid.git)
 
+## APIs
+
+[ASP.NET](https://github.com/DMarzzucco/DeathTime.ASP.NET.git)
+
+[ExpressJs](https://github.com/DMarzzucco/DeathTime.Express-API.git)
+
 ## Author
 
 Inspired from (@kleampa)
