@@ -1,0 +1,17 @@
+@startuml
+start
+
+:Get current time (ZonedDateTime.now());
+:Define deadline (deathTime);
+
+if (current_time > deadline) then (Yes)
+    :Log a message in the logger;
+    :Delete all records from the repository;
+    :Set HTTP status 403 (FORBIDDEN);
+    :Write JSON response {"message": "the time has expired"};
+    :Set content type to application/json;
+    stop
+else (No)
+    :Proceed with the next filter;
+    stop
+@enduml
