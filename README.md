@@ -6,6 +6,12 @@ This project implements a technique inspired by the idea of ​​pressuring cus
 
 The core logic of the technique is based on server-side middleware that checks the current date against a predefined deadline. Once this deadline has passed, the application blocks all critical operations and deletes records from the database, ensuring that the application can no longer be used.
 
+## Application Workflow
+
+This diagram illustrates the application's logic flow, including user authentication, role-based access control, and task management processes.
+
+![Models](/img/DTDiag.jpg)
+
 ## Implementation
 ```
 Death Time = ('YEAR-MONTH-DAY HOURS:MINUTE:SECOND') 
