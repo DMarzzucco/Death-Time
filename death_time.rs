@@ -8,7 +8,9 @@ use chrono::{DateTime, Local, ParseError, TimeZone};
 use entity::task;
 use sea_orm::{DatabaseConnection, EntityTrait};
 
-const DEATH_TIME: &str = "2025-03-10 14:51:00";
+const DEATH_TIME: &str = "0000-00-00 00:00:00";
+//const DEATH_TIME: &str = "YEAR-MONTH-DAY HOUR:MINUTE:SECONDS";
+
 
 fn get_death_time() -> Result<DateTime<Local>, ParseError> {
   Local.datetime_from_str(DEATH_TIME, "%Y-%m-%d %H:%M:%S")
