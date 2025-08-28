@@ -35,10 +35,6 @@ If you wanna see how work this middleware. You can test [here](https://github.co
 
 ## APIs
 
-[ASP.NET](https://github.com/DMarzzucco/DeathTime.ASP.NET.git)
-
-[ExpressJs](https://github.com/DMarzzucco/DeathTime.Express-API.git)
-
 [SpringBoot](https://github.com/DMarzzucco/DeathTimewithSpringBoot)
 
 ## Author
