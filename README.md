@@ -33,10 +33,6 @@ var deathTime = DateTime.Parse("YYYY-MM-DDTHH:mm:ssZ");
 
 If you wanna see how work this middleware. You can test [here](https://github.com/DMarzzucco/register_Date_with_No_Paid_incluid.git)
 
-## APIs
-
-[SpringBoot](https://github.com/DMarzzucco/DeathTimewithSpringBoot)
-
 ## Author
 
 Inspired from (@kleampa)
